@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+</head>
+
+<body>
+  <div id="app" class="container">
+    <div class="form-group">
+      <label>评论人：</label>
+      <input type="text" class="form-control" placeholder="请输入姓名">
+    </div>
+    <div class="form-group">
+      <label>评论内容：</label>
+      <textarea class="form-control" cols="30" rows="10"></textarea>
+    </div> 
+    <button class="btn btn-default">发表评论</button>
+
+    <ul>
+      <li v-for="item in list" :key="item.id">
+        <h3>评论人：{{ item.name }}</h3>
+        <p>评论内容：{{ item.content }}</p>
+      </li>
+    </ul>
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+
+
+    // 将vm实例看作是一个父组件
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: 1, name: 'jack', content: 'rose, where are you ?' },
+          { id: 2, name: 'rose', content: 'who are you ?' },
+          { id: 3, name: '小明', content: '我饿了' },
+        ]
+      }
+    })
+  
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .parent {
+            height: 400px;
+            width: 400px;
+            background-color: #f00;
+        }
+
+        .child {
+            height: 200px;
+            width: 200px;
+            margin: 100px auto;
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <parent>
+        </parent>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        Vue.component("parent", {
+            template: `        
+                <div class="parent">
+                    <h2>我是你爹，技能：{{ skill }}</h2>
+                    <child @fn="get"></child>
+                </div>
+            `,
+            data () {
+                return {
+                    skill: ''
+                }
+            },
+
+            methods: {
+                get (skill) {
+                    console.log('父亲接受到儿子的技能：', skill);
+                    this.skill = skill
+                }
+            }
+        })
+
+        Vue.component("child", {
+            template: `
+                <div class="child">
+                    <h2>地主家的傻儿子</h2>
+                    <button @click="teach">点一下</button>
+                </div>
+            `,
+            //发送ajax请求数据
+            created () {
+                this.$emit("fn", "撩汉")
+            },
+            methods: {
+                teach () {
+                    this.$emit("fn", "撩汉")
+
+                }
+            }
+        })
+
+
+
+
+        const vm = new Vue({
+            el: '#app',
+            data: {
+
+            }
+        })
+    </script>
+</body>
+
+</html>

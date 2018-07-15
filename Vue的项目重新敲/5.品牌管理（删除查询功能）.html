@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="app">
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="">id</label>
+                <input type="text" class="form-control" v-model="id">
+            </div>
+            <div class="form-group">
+                <label for="">名称</label>
+                <input type="email" class="form-control" v-model="name">
+            </div>
+            <!-- 
+                    注意：因为按钮的类型为 submit，因此，会触发表单的提交事件 
+            
+                    解决方式：给事件添加 .pervent 事件修饰符来阻止表单提交的默认行为
+                  -->
+            <button type="submit" class="btn btn-default" @click.prevent="add">添加</button>
+            <!-- 添加的过滤功能 -->
+            |
+            <div class="form-group">
+                <label for="exampleInputEmail2">根据 name 过滤：</label>
+                <input type="text" class="form-control" v-model="filterText">
+            </div>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名称</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in filterData()" :key="item.id">
+                    <td>{{ item.id }}</td>
+                    <td v-text="item.name"></td>
+                    <td>{{ item.time }}</td>
+                    <td>
+                        <a href="#" @click.prevent="del(item.id)">删除</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="./node_modules/vue/dist/vue.js"></script>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                id: '',
+                name: '',
+                filterText: "",
+                list: [
+                    { id: 1, name: '奔驰', time: new Date() },
+                    { id: 2, name: '宝马', time: new Date() },
+                    { id: 3, name: '玛莎拉蒂', time: new Date() },
+                    { id: 4, name: '比亚迪唐', time: new Date() },
+                ]
+            },
+
+            methods: {
+                add() {
+                    // console.log('单机事件触发了')
+                    var brand = {       //brand:品牌
+                        id: this.id,
+                        name: this.name,
+                        time: new Date()
+                    }
+
+                    // 添加到list中
+                    this.list.push(brand)
+
+                    // 清空文本框
+                    this.id = ''
+                    this.name = ''
+                },
+                // 删除数据：
+                // 1 给 a 标签，绑定单击事件
+                // 2 将每一项的id传递给事件
+                // 3 在事件中根据id找到索引号
+                // 4 根据索引号删除数组元素
+                del(id) {
+                    var index = this.list.findIndex(
+                        (item) => (item.id === id),//将{}和return省略了
+                    )
+                    this.list.splice(index, 1)
+                },
+                // 查询
+                filterData () {
+                    var tempList = this.list.filter((item) => {
+                        if (item.name.indexOf(this.filterText) !== -1) {
+                            return(true);
+                        }
+                    })
+                    return tempList;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

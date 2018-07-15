@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .parent {
+            height: 400px;
+            width: 400px;
+            background-color: #f00;
+        }
+
+        .child {
+            height: 200px;
+            width: 200px;
+            margin: 100px auto;
+            background-color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <parent>
+        </parent>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        // 1 父组件 传递数据给 子组件
+        //  步骤：
+        //    a. 父组件中准备要传递子组件的数据（parentMsg）
+        //    b. 在子组件标签中传递一个属性（ :skill="parentMsg" ），传递的属性是 skill
+        //    c. 子组件中通过 props 来接受数据 props: ['skill']，skill就是接受到的数据
+        //    d. 现在，就可以在子组件中使用父组件中传递过来的数据了
+        Vue.component("parent", {
+            template: `
+            <div class="parent">
+                <h1>这是父组件</h1>  
+                <child :skill="parentMsg" :money="money"></child>
+            </div>  
+            `,
+            data () {
+                return {
+                    parentMsg: "撩妹",
+                    money: 1000,
+                }
+            }
+        })
+
+        Vue.component("child", {
+            template: `
+                <div class="child">
+                    <h2>{{ skill }}</h2>
+                    <p>{{ money }}</p>
+                </div>
+            `,
+            props: ['skill', "money"]
+        })
+
+
+
+
+
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                
+            }
+        })
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <button @click="lang">浪起来</button>
+        <button @click="stop">安静</button>
+        <hr>
+        <h1>{{ content }}</h1>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        var flag = false;
+        var timeId;
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                content: "猥琐发育，别浪！"
+            },
+            methods: {
+                lang() {
+                    if (flag) {
+                        return;
+                    }
+                    flag = true;
+
+                    timeId = setInterval(() => {
+                        var first = this.content.slice(0, 1)
+                        var left = this.content.slice(1);
+                        this.content = left + first;
+                    }, 500)
+                },
+                stop() {
+                    clearInterval(timeId);
+                    flag = false;
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

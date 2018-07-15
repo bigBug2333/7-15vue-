@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <p id="p1" @click="fn">{{ msg }}</p>
+
+    <div>{{ abc }}</div>
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        msg: '测试数据',
+        abc: '7',
+        timerId: null
+      },
+      
+      // 添加template选项
+      // template: '<h1>这是template选项的内容 --- {{ msg }}</h1>',
+
+      methods: {
+        fn () {
+          this.msg = '更新后的msg'
+        }
+      },
+      // 一：挂载阶段
+      // 注意：这个钩子函数是在数据变为响应式前执行的，因此无法使用 data 中的数据
+      //       也不能使用 methods 中的方法
+      beforeCreate () {
+        console.warn('生命周期钩子函数：beforeCreate', this.msg, this.fn)
+      },
+      
+      // 重点钩子函数
+      // 使用场景：可以发送ajax请求获取数据
+      created () {
+        console.warn('生命周期钩子函数*：created', this.msg, this.fn)
+
+        // 开启定时器
+        this.timerId = setInterval(() => {
+          console.log('1')
+        }, 1000)
+      },
+
+      beforeMount () {
+        console.warn('生命周期钩子函数：beforeMount', document.getElementById('p1'))
+      },
+      
+      // 重点钩子函数
+      // 使用场景：可以操作DOM，也可以发送ajax请求
+      mounted () {
+        console.warn('生命周期钩子函数：mounted', document.getElementById('p1'))
+      },
+
+      // 二：更新阶段：
+      beforeUpdate () {
+        console.warn('生命周期钩子函数：beforeUpdate', document.getElementById('p1').innerText)
+      },
+
+      updated () {
+        console.warn('生命周期钩子函数：updated', document.getElementById('p1').innerText)
+      },
+
+      // 三：卸载阶段
+      beforeDestroy () {
+        console.warn('生命周期钩子函数：beforeDestroy')
+        
+        // 清理定时器
+        clearInterval(this.timerId)
+      },
+      destroyed () {
+        console.warn('生命周期钩子函数：destroyed')
+      }
+    })
+
+    setTimeout(() => {
+      // 卸载vm
+      vm.$destroy()
+    }, 2000)
+    
+    // 通过调用 $mount 方法来指定Vue管理的边界
+    // vm.$mount('#app')
+  </script>
+</body>
+
+</html>

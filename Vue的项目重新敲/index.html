@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div id="app" class="container">
+    <!-- 评论表单组件 -->
+    <!-- b 将方法传递给子组件 -->
+    <commentform @get-comment="getComment"></commentform>
+
+    <!-- 评论列表组件： -->
+    <commentlist :list="list"></commentlist>
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+    // 1 将评论列表改造成一个组件
+    Vue.component('commentlist', {
+      template: `
+        <ul>
+          <li v-for="item in list" :key="item.id">
+            <h3>评论人：{{ item.name }}</h3>
+            <p>评论内容：{{ item.content }}</p>
+          </li>
+        </ul>
+      `,
+        
+      // 接受数据
+      props: ['list']
+    })
+
+    // 2 将评论表单改造成一个组件
+    Vue.component('commentform', {
+      template: `
+        <div>
+          <div class="form-group">
+            <label>评论人：</label>
+            <input type="text" class="form-control" placeholder="请输入姓名" v-model="txtName">
+          </div>
+          <div class="form-group">
+            <label>评论内容：</label>
+            <textarea class="form-control" cols="30" rows="10" v-model="txtContent"></textarea>
+          </div>
+          <button class="btn btn-default" @click="send">发表评论</button>
+        </div>
+      `,
+
+      data () {
+        // 该组件中评论人和评论内容数据
+        return {
+          txtName: '',
+          txtContent: ''
+        }
+      },
+
+      methods: {
+        send () {
+          // 获取到用户输入的评论人和评论内容
+          // 传递父组件
+          console.log('子组件提交了')
+          
+          // c 触发父组件传递过来的方法，将数据作为参数传递
+          this.$emit('get-comment', this.txtName, this.txtContent)
+        }
+      }
+    })
+
+    // 将 vm实例 看作是一个父组件，它的模板是：#app
+    const vm = new Vue({
+      el: '#app',
+
+      data: {
+        list: [
+          { id: 1, name: 'jack', content: 'rose, where are you ?' },
+          { id: 2, name: 'rose', content: 'who are you ?' },
+          { id: 3, name: '小明', content: '我饿了' },
+        ]
+      },
+
+      methods: {
+        // a 准备一个方法
+        getComment (name, content) {
+          const id = this.list[ this.list.length - 1 ].id + 1
+
+          // d 在此，就可以接收到子组件传递过来的数据了
+          // console.log('接收到commentform组件传递过来的数据：', name, content)
+          // this.list.push({ id: id, name: name, content: content })
+
+          // ES6中对象属性的简化语法：
+          // 相当于上面一句代码的作用
+          this.list.push({ id, name, content })
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

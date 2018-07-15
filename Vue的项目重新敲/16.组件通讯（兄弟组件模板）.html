@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    .jack {
+      background-color: #0f0;
+    }
+    .rose {
+      background-color: hotpink;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <jack></jack>
+    <rose></rose>
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+    // 有两个非父子关系的组件：jack 和 rose 组件
+    // jack组件要告诉rose组件：我爱你
+
+    // jack对rose说：我爱你
+    // rose 接受数据，注册事件
+    //  bus.$on('love', (data) => {})
+    // jack 发送数据，触发事件
+    //  bus.$emit('love', '数据')
+
+    // 注意：
+    //  1 一定是在同一个bus中注册和触发的事件
+    //  2 事件名称需要保持一致，事件名称可以是任意值
+
+    // 非父子组件之间通过一个空Vue实例来传递数据：
+    // bus 专业名称为：事件总线（公交车）
+    const bus = new Vue()
+
+    Vue.component('jack', {
+      template: `
+        <div class="jack">
+          <h2>这是jack组件：</h2>
+
+          <button>告诉rose：我爱你</button>
+        </div>
+      `,
+    })
+    
+    // 注册事件：
+    Vue.component('rose', {
+      template: `
+        <div class="rose">
+          <h2>这是rose组件：</h2>
+          <p>接受到jack的表白：</p>
+        </div>
+      `,
+    })
+
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        
+      }
+    })
+  </script>
+</body>
+
+</html>

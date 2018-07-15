@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .green {
+            background-color: #0f0;
+        }
+
+        .cls {
+            background-color: hotpink;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <ul>
+            <li 
+            v-for="(item, index) in list"
+            :key="item.id"
+            :class="{ green: index % 2 !== 0,
+            cls:index % 2 ===0 }"
+            >{{ item.name }}</li>
+        </ul>
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        const vm = new Vue({
+            el: '#app',
+            data: {
+                list: [
+                    { id: 1, name: '抽烟' },
+                    { id: 2, name: '喝酒' },
+                    { id: 3, name: '烫头发' },
+                    { id: 4, name: '开车' },
+                    { id: 5, name: '撩妹' },
+                    { id: 6, name: '撩汉子' }
+                ]
+            }
+        })
+    </script>
+</body>
+
+</html>

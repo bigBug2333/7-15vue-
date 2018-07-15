@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+</head>
+
+<body>
+  <div id="app" class="container">
+    <!-- 评论表单组件 -->
+    <!-- b 将方法传递给子组件 -->
+    <commentform @fn="getComment"></commentform>
+
+    <!-- 评论列表组件： -->
+    <commentlist :list="list"></commentlist>
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+    // 1 将评论列表改造成一个组件(父到子)
+    Vue.component('commentlist', {
+      template: `
+        <ul>
+          <li v-for="item in list" :key="item.id">
+            <h3>评论人：{{ item.name }}</h3>
+            <p>评论内容：{{ item.content }}</p>
+          </li>
+        </ul>
+      `,
+
+      // 接受数据
+      props: ['list']
+    })
+
+
+    Vue.component('commentform', {
+      template: `
+        <div>
+          <div class="form-group">
+            <label>评论人：</label>
+            <input type="text" class="form-control" placeholder="请输入姓名" v-model="txtName">
+          </div>
+          <div class="form-group">
+            <label>评论内容：</label>
+            <textarea class="form-control" cols="30" rows="10" v-model="txtContent"></textarea>
+          </div>
+          <button class="btn btn-default" @click="send">发表评论</button>
+        </div>
+      `,
+      data () {
+        return {
+          txtName: "",
+          txtContent: "",
+        }
+      },
+      methods: {
+        send () {
+          // 获取到用户输入的评论人和评论内容
+          // 传递父组件
+          console.log("提交子组件");
+          this.$emit('fn', this.txtName, this.txtContent)
+
+        }
+      }
+    })
+
+    // 将vm实例看作是一个父组件
+    const vm = new Vue({
+      el: '#app',
+      data: {
+        list: [
+          { id: 1, name: 'jack', content: 'rose, where are you ?' },
+          { id: 2, name: 'rose', content: 'who are you ?' },
+          { id: 3, name: '小明', content: '我饿了' },
+        ]
+      },
+      methods: {
+        // 用来接收子组件传来的数据
+        getComment (name, content) {
+          const id = this.list[ this.list.length - 1 ].id + 1
+
+          this.list.push({ id, name, content })
+        }
+      }
+    })
+
+  </script>
+
+</body>
+
+</html>

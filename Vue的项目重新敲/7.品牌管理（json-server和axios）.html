@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="app">
+    <form class="form-inline">
+      <!-- <div class="form-group">
+        <label for="">id</label>
+        <input type="text" class="form-control" v-model="id">
+      </div> -->
+      <div class="form-group">
+        <label for="">名称</label>
+        <input type="email" class="form-control" v-model="name">
+      </div>
+      <button type="submit" class="btn btn-default" @click.prevent="add">添加</button>
+    </form>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>名称</th>
+          <th>创建时间</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in list" :key="item.id">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.time }}</td>
+          <td>
+            <a href="#" @click.prevent="del(item.id)">删除</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="./node_modules/vue/dist/vue.js"></script>
+  <script src="./node_modules/axios/dist/axios.js"></script>
+  <script>
+    // 1 在目录中创建一个json文件
+    // 2 在该目录中执行命令： json-server ./data.json
+    // 3 从终端中就可以获取到接口地址：http://localhost:3000/brands
+
+    // 使用axios发送请求获取数据：
+    // 1 安装 axios： npm i axios
+    // 2 引入 axios
+    // 3 使用 axios 发送请求获取数据
+
+    // 需求：
+    // 1 进入页面就展示所有的数据
+    //  步骤：
+    //    a. 创建vue实例
+    //    b. 在 created 钩子函数中，发送请求获取数据
+
+    // 2 添加数据
+    //  说明：使用axios不需要自己提供id，axios会自动帮你生成id
+    //  步骤：
+    //  a. 添加单击事件
+    //  b. 在单击事件中拿到用户输入的内容
+    //  c. 发送POST请求，来完成添加操作！！！
+
+    // 3 删除数据
+    //  说明：使用 delete 方法来提交删除数据的请求
+    //  步骤：
+    //  a. 给删除按钮绑定单击事件
+    //  b. 获取到当前要删除数据的id
+    //  c. 发送 DELETE 请求，完成删除数据操作！！！
+
+    var vm = new Vue({
+      el: "#app",
+      data: {
+        list: [],
+        name: ''
+      },
+
+      //2.获取数据
+      created () {
+        this.getData()
+      },
+
+      methods: {
+        getData () {
+          axios
+            .get('http://localhost:3000/brands')
+            .then((res) => {
+              this.list = res.data
+            })
+        },
+        //1.添加数据
+        add () {
+          //发送给服务器的数据
+          var data = {
+            name: this.name,
+            time: new Date()
+          }
+          axios
+            .post('http://localhost:3000/brands', data)
+            .then(res => {
+              console.log('添加数据完成', res)
+              this.list.push(res.data)
+            })
+          // 清空文本框
+          this.name = ''
+        },
+        //3.删除数据
+        del (id) {
+          axios
+            .delete('http://localhost:3000/brands/' + id)
+            .then(res => {
+              this.getData()
+            })
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
